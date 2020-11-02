@@ -1,0 +1,51 @@
+﻿@using TwilightSparkle.Forum.IdentityExtensions
+
+<html>
+<head>
+    <title>@ViewData["Title"] - Twilight Sparkle Forum</title>
+
+    <link rel="stylesheet" type="text/css" href="~/css/main.css" />
+    <link href="~/font-awesome/free-v4-shims.min.css" media="all" rel="stylesheet">
+    <link href="~/font-awesome/free-v4-font-face.min.css" media="all" rel="stylesheet">
+    <link href="~/font-awesome/free.min.css" media="all" rel="stylesheet">
+
+    <script src="~/font-awesome/font-awesome.js"></script>
+    <link rel="shortcut icon" type="image/ico" href="~/favicon.ico" />
+</head>
+<body>
+    <header>
+        <nav>
+            <a class="menu-heading forum-link" href="/Home/Index">Twilight Sparkle Forum</a>
+
+            <ul class="menu-list">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="menu-item">
+                        <a class="forum-link" href="/Home/Profile">
+                            <img id="header-user-profile-image" src="@Url.GetProfileImageUrl()" width="45" height="45" />
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link forum-link" href="/Home/Profile">@User.Identity.Name</a>
+                    </li>
+                    <li class="menu-item">
+                        <form action="/Authentication/SignOut" method="post" id="sign-out-form">
+                            <input type="submit" class="menu-link" value="Sign out" />
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li class="menu-item">
+                        <a class="menu-link forum-link" href="/Authentication/SignIn">Sign In</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link forum-link" href="/Authentication/SignUp">Sign Up</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </header>
+    @RenderBody()
+</body>
+</html>
