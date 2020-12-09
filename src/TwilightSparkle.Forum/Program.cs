@@ -14,7 +14,11 @@ namespace TwilightSparkle.Forum
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(builder => builder.AddJsonFile("appsettings.json"))
+                .ConfigureAppConfiguration((ctx, builder) =>
+                {
+                    builder.AddJsonFile("appsettings.json");
+                    builder.AddJsonFile($"appsettings.{ctx.HostingEnvironment.EnvironmentName}.json", true);
+                })
                 .ConfigureLogging((hostContext, builder) =>
                 {
                     builder.ClearProviders();
