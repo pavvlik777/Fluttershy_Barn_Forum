@@ -6,9 +6,9 @@ namespace TwilightSparkle.Forum.Foundation.Authentication
 {
     public interface IAuthenticationService
     {
-        Task<ServiceResult<SignUpErrorType>> SignUpAsync(SignUpDto signUpDto);
+        Task<ServiceResult<SignUpError>> SignUpAsync(SignUpDto signUpDto);
 
-        Task<ServiceResult<SignInErrorType>> SignInAsync(string username, string password, bool rememberMe, SignInHandler signInHandler);
+        Task<ServiceResult<SignInError>> SignInAsync(string username, string password, bool rememberMe, SignInHandler signInHandler);
 
         Task SignOutAsync(SignOutHandler signOutHandler);
     }
