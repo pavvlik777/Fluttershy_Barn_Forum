@@ -22,7 +22,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<IReadOnlyCollection<Section>> GetSectionsAsync()
         {
             var sectionsRepository = _unitOfWork.GetRepository<Section>();
-            var sections = await sectionsRepository.GetWhereAsync(s => !string.IsNullOrEmpty(s.Name));
+            var sections = await sectionsRepository.WhereAsync(s => !string.IsNullOrEmpty(s.Name));
 
             return sections;
         }
@@ -30,7 +30,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<IReadOnlyCollection<Thread>> GetPopularThreadsAsync()
         {
             var threadsRepository = _unitOfWork.GetRepository<Thread>();
-            var threads = await threadsRepository.GetWhereAsync(t => !string.IsNullOrEmpty(t.Title), t => t.Author, t => t.Section);
+            var threads = await threadsRepository.WhereAsync(t => !string.IsNullOrEmpty(t.Title), t => t.Author, t => t.Section);
 
             return threads;
         }
@@ -38,7 +38,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<IReadOnlyCollection<Thread>> GetSectionThreadsAsync(string sectionName)
         {
             var threadsRepository = _unitOfWork.GetRepository<Thread>();
-            var threads = await threadsRepository.GetWhereAsync(t => t.Section.Name == sectionName, t => t.Author, t => t.Section);
+            var threads = await threadsRepository.WhereAsync(t => t.Section.Name == sectionName, t => t.Author, t => t.Section);
 
             return threads;
         }
@@ -46,7 +46,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<IReadOnlyCollection<Thread>> GetUserThreadsAsync(string username)
         {
             var threadsRepository = _unitOfWork.GetRepository<Thread>();
-            var threads = await threadsRepository.GetWhereAsync(t => t.Author.Username == username, t => t.Author, t => t.Section);
+            var threads = await threadsRepository.WhereAsync(t => t.Author.Username == username, t => t.Author, t => t.Section);
 
             return threads;
         }
@@ -54,7 +54,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<Thread> GetThreadAsync(int threadId)
         {
             var threadsRepository = _unitOfWork.GetRepository<Thread>();
-            var thread = await threadsRepository.GetFirstOrDefaultAsync(t => t.Id == threadId, t => t.Author, t => t.Section);
+            var thread = await threadsRepository.FirstOrDefaultAsync(t => t.Id == threadId, t => t.Author, t => t.Section);
 
             return thread;
         }
@@ -75,8 +75,8 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
             var sectionsRepository = _unitOfWork.GetRepository<Section>();
             var usersRepository = _unitOfWork.UserRepository;
 
-            var author = await usersRepository.GetFirstOrDefaultAsync(u => u.Username == authorNickname);
-            var section = await sectionsRepository.GetFirstOrDefaultAsync(s => s.Name == sectionName);
+            var author = await usersRepository.FirstOrDefaultAsync(u => u.Username == authorNickname);
+            var section = await sectionsRepository.FirstOrDefaultAsync(s => s.Name == sectionName);
 
             var thread = new Thread
             {
@@ -96,7 +96,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<ServiceResult<DeleteThreadErrorType>> DeleteThreadAsync(int threadId, string username)
         {
             var threadsRepository = _unitOfWork.GetRepository<Thread>();
-            var thread = await threadsRepository.GetFirstOrDefaultAsync(t => t.Id == threadId, t => t.Author, t => t.Section);
+            var thread = await threadsRepository.FirstOrDefaultAsync(t => t.Id == threadId, t => t.Author, t => t.Section);
 
             if (thread == null)
             {
@@ -117,12 +117,12 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task LikeOrDislikeThreadAsync(int threadId, bool isLike, string username)
         {
             var threadsRepository = _unitOfWork.GetRepository<Thread>();
-            var thread = await threadsRepository.GetFirstOrDefaultAsync(t => t.Id == threadId, t => t.Author, t => t.Section);
+            var thread = await threadsRepository.FirstOrDefaultAsync(t => t.Id == threadId, t => t.Author, t => t.Section);
             var usersRepository = _unitOfWork.UserRepository;
-            var author = await usersRepository.GetFirstOrDefaultAsync(u => u.Username == username);
+            var author = await usersRepository.FirstOrDefaultAsync(u => u.Username == username);
 
             var likesRepository = _unitOfWork.GetRepository<LikeDislike>();
-            var currentLike = await likesRepository.GetFirstOrDefaultAsync(l => l.ThreadId == threadId && l.User == author, l => l.Thread, l => l.User);
+            var currentLike = await likesRepository.FirstOrDefaultAsync(l => l.ThreadId == threadId && l.User == author, l => l.Thread, l => l.User);
             if (currentLike == null)
             {
                 currentLike = new LikeDislike
@@ -156,9 +156,9 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
             }
 
             var threadsRepository = _unitOfWork.GetRepository<Thread>();
-            var thread = await threadsRepository.GetFirstOrDefaultAsync(t => t.Id == threadId, t => t.Author, t => t.Section);
+            var thread = await threadsRepository.FirstOrDefaultAsync(t => t.Id == threadId, t => t.Author, t => t.Section);
             var usersRepository = _unitOfWork.UserRepository;
-            var author = await usersRepository.GetFirstOrDefaultAsync(u => u.Username == authorNickname);
+            var author = await usersRepository.FirstOrDefaultAsync(u => u.Username == authorNickname);
 
             var commentaryRepository = _unitOfWork.GetRepository<Commentary>();
             var newComment = new Commentary
@@ -178,8 +178,8 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<int> GetAmountOfLikesAsync(int threadId)
         {
             var likesRepository = _unitOfWork.GetRepository<LikeDislike>();
-            var likes = await likesRepository.GetWhereAsync(l => l.ThreadId == threadId && l.IsLike);
-            var dislikes = await likesRepository.GetWhereAsync(l => l.ThreadId == threadId && !l.IsLike);
+            var likes = await likesRepository.WhereAsync(l => l.ThreadId == threadId && l.IsLike);
+            var dislikes = await likesRepository.WhereAsync(l => l.ThreadId == threadId && !l.IsLike);
 
             return likes.Count - dislikes.Count;
         }
@@ -187,7 +187,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<LikeDislike> GetLikeAsync(int threadId, string authorNickname)
         {
             var likesRepository = _unitOfWork.GetRepository<LikeDislike>();
-            var like = await likesRepository.GetFirstOrDefaultAsync(l => l.ThreadId == threadId && l.User.Username == authorNickname, l => l.Thread, l => l.User);
+            var like = await likesRepository.FirstOrDefaultAsync(l => l.ThreadId == threadId && l.User.Username == authorNickname, l => l.Thread, l => l.User);
 
             return like;
         }
@@ -195,7 +195,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsManagement
         public async Task<IReadOnlyCollection<Commentary>> GetCommentariesAsync(int threadId)
         {
             var commentaryRepository = _unitOfWork.GetRepository<Commentary>();
-            var comments = await commentaryRepository.GetWhereAsync(c => c.ThreadId == threadId, c => c.Thread, c => c.Author);
+            var comments = await commentaryRepository.WhereAsync(c => c.ThreadId == threadId, c => c.Thread, c => c.Author);
 
             return comments;
         }

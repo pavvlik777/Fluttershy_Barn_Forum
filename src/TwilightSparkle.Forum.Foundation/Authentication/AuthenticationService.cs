@@ -43,7 +43,7 @@ namespace TwilightSparkle.Forum.Foundation.Authentication
         }
 
 
-        public async Task<ServiceResult<SignUpError>> SignUpAsync(SignUpDto signUpDto)
+        public async Task<ServiceResult<SignUpError>> SignUp(SignUpDto signUpDto)
         {
             var isValidUsername = CheckIfValidUsername(signUpDto.Username);
             if (!isValidUsername)
@@ -67,12 +67,12 @@ namespace TwilightSparkle.Forum.Foundation.Authentication
             }
 
             var userRepository = _unitOfWork.UserRepository;
-            var duplicateUser = await userRepository.GetFirstOrDefaultAsync(u => u.Username == signUpDto.Username);
+            var duplicateUser = await userRepository.FirstOrDefaultAsync(u => u.Username == signUpDto.Username);
             if (duplicateUser != null)
             {
                 return ServiceResult.CreateFailed(SignUpError.DuplicateUsername);
             }
-            duplicateUser = await userRepository.GetFirstOrDefaultAsync(u => u.Email == signUpDto.Email);
+            duplicateUser = await userRepository.FirstOrDefaultAsync(u => u.Email == signUpDto.Email);
             if (duplicateUser != null)
             {
                 return ServiceResult.CreateFailed(SignUpError.DuplicateEmail);
@@ -90,26 +90,6 @@ namespace TwilightSparkle.Forum.Foundation.Authentication
             await _unitOfWork.SaveAsync();
 
             return ServiceResult<SignUpError>.CreateSuccess();
-        }
-
-        public async Task<ServiceResult<SignInError>> SignInAsync(string username, string password, bool rememberMe, SignInHandler signInHandler)
-        {
-            var userRepository = _unitOfWork.UserRepository;
-            var passwordHash = _hasher.GetHash(password);
-            var user = await userRepository.GetFirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == passwordHash);
-            if(user == null)
-            {
-                return ServiceResult.CreateFailed(SignInError.InvalidCredentials);
-            }
-
-            await signInHandler(user.Username, user.Id, rememberMe);
-
-            return ServiceResult<SignInError>.CreateSuccess();
-        }
-
-        public async Task SignOutAsync(SignOutHandler signOutHandler)
-        {
-            await signOutHandler();
         }
 
 

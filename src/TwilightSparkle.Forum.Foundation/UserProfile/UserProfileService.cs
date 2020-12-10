@@ -21,7 +21,7 @@ namespace TwilightSparkle.Forum.Foundation.UserProfile
         {
             var userRepository = _unitOfWork.UserRepository;
             var currentUserIdentity = currentUserIdentityProvider();
-            var currentUser = await userRepository.GetSingleOrDefaultAsync(u => u.Username == currentUserIdentity.Name);
+            var currentUser = await userRepository.SingleOrDefaultAsync(u => u.Username == currentUserIdentity.Name);
 
             return currentUser;
         }
@@ -30,7 +30,7 @@ namespace TwilightSparkle.Forum.Foundation.UserProfile
         {
             var userRepository = _unitOfWork.UserRepository;
             var currentUserIdentity = currentUserIdentityProvider();
-            var currentUser = await userRepository.GetSingleOrDefaultAsync(u => u.Username == currentUserIdentity.Name, u => u.ProfileImage);
+            var currentUser = await userRepository.SingleOrDefaultAsync(u => u.Username == currentUserIdentity.Name, u => u.ProfileImage);
             if (currentUser.ProfileImageId.HasValue)
             {
                 return currentUser.ProfileImage.ExternalId;
@@ -44,7 +44,7 @@ namespace TwilightSparkle.Forum.Foundation.UserProfile
             var userRepository = _unitOfWork.UserRepository;
             var imageRepostiory = _unitOfWork.GetRepository<UploadedImage>();
 
-            var newImage = await imageRepostiory.GetFirstOrDefaultAsync(i => i.ExternalId == dto.UserProfileImageExternalId);
+            var newImage = await imageRepostiory.FirstOrDefaultAsync(i => i.ExternalId == dto.UserProfileImageExternalId);
             if (newImage == null)
             {
                 return ServiceResult.CreateFailed(UpdateProfileErrorType.InvalidProfileImage);

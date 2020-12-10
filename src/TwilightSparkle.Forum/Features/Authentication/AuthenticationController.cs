@@ -36,7 +36,7 @@ namespace TwilightSparkle.Forum.Features.Authentication
         {
             _logger.LogInformation($"Creating new user with username - {request.Username}, email - {request.Email}");
 
-            var signUpResult = await _authenticationService.SignUpAsync(request.Map());
+            var signUpResult = await _authenticationService.SignUp(request.Map());
             if (signUpResult.IsSuccess)
             {
                 _logger.LogInformation($"Created new user with username - {request.Username}, email - {request.Email}");

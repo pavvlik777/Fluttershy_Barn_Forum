@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TwilightSparkle.Firebase.Storage\TwilightSparkle.Firebase.Storage.csproj" />
     <ProjectReference Include="..\TwilightSparkle.Forum.DomainModel\TwilightSparkle.Forum.DomainModel.csproj" />
     <ProjectReference Include="..\TwilightSparkle.Forum.Repository\TwilightSparkle.Forum.Repository.csproj" />
   </ItemGroup>

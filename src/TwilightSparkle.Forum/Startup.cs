@@ -3,23 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
-using TwilightSparkle.Common.Hasher;
-using TwilightSparkle.Forum.Configurations;
 using TwilightSparkle.Forum.DatabaseSeed;
-using TwilightSparkle.Forum.Foundation.Authentication;
-using TwilightSparkle.Forum.Foundation.ImageService;
-using TwilightSparkle.Forum.Foundation.ImageStorage;
 using TwilightSparkle.Forum.Foundation.ThreadsManagement;
 using TwilightSparkle.Forum.Foundation.UserProfile;
 using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
-using TwilightSparkle.Forum.Repository.Interfaces;
-using TwilightSparkle.Forum.Repository.UnitOfWork;
 
 namespace TwilightSparkle.Forum
 {
@@ -37,29 +28,21 @@ namespace TwilightSparkle.Forum
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
-            services.AddScoped<DbContext, DatabaseContext>();
+            services.AddSqlDatabase(connectionString);
 
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IUserProfileService, UserProfileService>();
-            services.AddScoped<IImageStorageService, ImageStorageService>();
-            services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<IThreadsManagementService, ThreadsManagementService>();
+            services.AddCommon();
 
-            services.AddScoped<IForumUnitOfWork, ForumUnitOfWork>();
+            services.AddAuthenticationServices();
 
-            services.AddSingleton<IHasher, Sha256>();
-
-            services.Configure<ImageStorageConfiguration>(Configuration.GetSection("ImageUploading"));
-            services.AddSingleton<IImageStorageConfiguration>(provider =>
-            {
-                var imageUploadConfigOptions = provider.GetService<IOptions<ImageStorageConfiguration>>();
-                var imageUploadConfig = imageUploadConfigOptions.Value;
-
-                return imageUploadConfig;
-            });
+            var imageStorageConfigurationSection = Configuration.GetSection("ImageStorage");
+            var firebaseImageStorageConfigurationSection = Configuration.GetSection("FirebaseImageStorage");
+            services.AddFirebaseImageServices(imageStorageConfigurationSection, firebaseImageStorageConfigurationSection);
 
             services.AddSingleton(Configuration);
+
+
+            services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IThreadsManagementService, ThreadsManagementService>();
 
 
 

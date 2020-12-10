@@ -4,6 +4,7 @@
     {
         EmptyFilePath,
         TooBigImage,
-        NotAllowedMediaType
+        NotAllowedMediaType,
+        StorageError
     }
 }
