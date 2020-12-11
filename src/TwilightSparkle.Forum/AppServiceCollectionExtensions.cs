@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using TwilightSparkle.Common.Hasher;
 using TwilightSparkle.Forum.Configurations;
 using TwilightSparkle.Forum.Foundation.ImageStorage;
+using TwilightSparkle.Forum.Foundation.UsersInfo;
 using TwilightSparkle.Forum.Repository.DbContexts;
 using TwilightSparkle.Forum.Repository.Interfaces;
 using TwilightSparkle.Forum.Repository.UnitOfWork;
@@ -51,6 +52,13 @@ namespace TwilightSparkle.Forum
         public static IServiceCollection AddAuthenticationServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddUsersInfo(this IServiceCollection services)
+        {
+            services.AddScoped<IUserInfoService, UserInfoService>();
 
             return services;
         }

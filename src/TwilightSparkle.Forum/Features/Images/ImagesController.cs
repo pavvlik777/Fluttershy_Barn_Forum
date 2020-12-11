@@ -29,6 +29,10 @@ namespace TwilightSparkle.Forum.Features.Images
 
 
         [HttpGet("{id}")]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get([FromRoute] string id)
         {
             _logger.LogInformation($"Getting image with id - {id}");
@@ -50,6 +54,9 @@ namespace TwilightSparkle.Forum.Features.Images
         }
 
         [HttpPost("upload")]
+        [ProducesResponseType(typeof(SavedImageDataResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<SavedImageDataResponse>> UploadImage(IFormFile image)
         {
             if (image == null)

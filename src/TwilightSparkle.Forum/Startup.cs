@@ -34,6 +34,8 @@ namespace TwilightSparkle.Forum
 
             services.AddAuthenticationServices();
 
+            services.AddUsersInfo();
+
             var imageStorageConfigurationSection = Configuration.GetSection("ImageStorage");
             var firebaseImageStorageConfigurationSection = Configuration.GetSection("FirebaseImageStorage");
             services.AddFirebaseImageServices(imageStorageConfigurationSection, firebaseImageStorageConfigurationSection);
