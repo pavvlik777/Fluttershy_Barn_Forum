@@ -39,6 +39,11 @@ namespace TwilightSparkle.Repository.Implementations
             return await GetQuery(includes).FirstOrDefaultAsync(expression);
         }
 
+        public IQueryable<T> All(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
+        {
+            return GetQuery(includes).Where(expression);
+        }
+
         public void Create(T item)
         {
             Entities.Add(item);

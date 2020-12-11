@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -12,6 +13,8 @@ namespace TwilightSparkle.Repository.Interfaces
         Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
 
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
+
+        IQueryable<T> All(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
 
         void Create(T item);
 
