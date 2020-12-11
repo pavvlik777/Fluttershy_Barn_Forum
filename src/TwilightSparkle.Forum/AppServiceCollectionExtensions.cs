@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 using TwilightSparkle.Common.Hasher;
 using TwilightSparkle.Forum.Configurations;
 using TwilightSparkle.Forum.Foundation.ImageStorage;
+using TwilightSparkle.Forum.Foundation.SectionsService;
+using TwilightSparkle.Forum.Foundation.ThreadsService;
 using TwilightSparkle.Forum.Foundation.UsersInfo;
 using TwilightSparkle.Forum.Repository.DbContexts;
 using TwilightSparkle.Forum.Repository.Interfaces;
@@ -56,9 +58,17 @@ namespace TwilightSparkle.Forum
             return services;
         }
 
-        public static IServiceCollection AddUsersInfo(this IServiceCollection services)
+        public static IServiceCollection AddUsersInfoServices(this IServiceCollection services)
         {
             services.AddScoped<IUserInfoService, UserInfoService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddThreadsSectionsManagementServices(this IServiceCollection services)
+        {
+            services.AddScoped<IThreadsManagementService, ThreadsManagementService>();
+            services.AddScoped<ISectionsManagementService, SectionsManagementService>();
 
             return services;
         }

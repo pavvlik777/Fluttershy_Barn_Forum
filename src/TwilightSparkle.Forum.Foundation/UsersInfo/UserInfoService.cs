@@ -11,7 +11,7 @@ namespace TwilightSparkle.Forum.Foundation.UsersInfo
     {
         private readonly IForumUnitOfWork _unitOfWork;
 
-        private const int MaxGetQuesrySize = 100;
+        private const int MaxGetQuerySize = 100;
 
 
         public UserInfoService(IForumUnitOfWork unitOfWork)
@@ -68,7 +68,7 @@ namespace TwilightSparkle.Forum.Foundation.UsersInfo
                 return ServiceResult<UserThreadsInfo, GetUserThreadsInfoError>.CreateFailed(GetUserThreadsInfoError.NotFound);
             }
 
-            if (request.StartIndex < 0 || request.Size > MaxGetQuesrySize)
+            if (request.StartIndex < 0 || request.Size > MaxGetQuerySize)
             {
                 return ServiceResult<UserThreadsInfo, GetUserThreadsInfoError>.CreateFailed(GetUserThreadsInfoError.InvalidPaginationArguments);
             }

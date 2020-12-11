@@ -34,18 +34,15 @@ namespace TwilightSparkle.Forum
 
             services.AddAuthenticationServices();
 
-            services.AddUsersInfo();
+            services.AddUsersInfoServices();
+
+            services.AddThreadsSectionsManagementServices();
 
             var imageStorageConfigurationSection = Configuration.GetSection("ImageStorage");
             var firebaseImageStorageConfigurationSection = Configuration.GetSection("FirebaseImageStorage");
             services.AddFirebaseImageServices(imageStorageConfigurationSection, firebaseImageStorageConfigurationSection);
 
             services.AddSingleton(Configuration);
-
-
-            services.AddScoped<IUserProfileService, UserProfileService>();
-            services.AddScoped<IThreadsManagementService, ThreadsManagementService>();
-
 
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
