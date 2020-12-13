@@ -9,6 +9,7 @@
       >
         <router-link
           :to="getSectionRoute(section.name)"
+          :key="$route.path"
           class="forum-layout-navigation__link"
         >
           {{ section.name }}

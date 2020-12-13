@@ -14,7 +14,7 @@
 <script>
 import AppHeader from '@/components/AppHeader'
 import AppFooter from '@/components/AppFooter'
-import api from '@/api'
+import { datesHelper } from '@/utils'
 
 export default {
   name: 'MainLayout',
@@ -23,7 +23,7 @@ export default {
     AppFooter
   },
   created () {
-    api.heartbeat.get.date()
+    console.log(datesHelper.getDateTimeFromDateString(new Date()))
   },
   computed: {
     isUserDataLoading () {

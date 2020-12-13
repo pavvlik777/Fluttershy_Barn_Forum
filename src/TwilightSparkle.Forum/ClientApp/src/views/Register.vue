@@ -29,7 +29,7 @@ export default {
       this.$cookies.set('refresh-token', refresh_token, 60 * 60 * 24 * 30)
       await this.$store.dispatch('SET_USER_DATA')
       this.$store.commit('SET_LOADING', false)
-      this.$router.replace({ name: 'Home' })
+      this.$router.go(-1)
     }
   }
 }

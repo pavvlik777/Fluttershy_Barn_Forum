@@ -9,6 +9,9 @@ const Error500 = () => import('@/views/Errors/Error500')
 const Register = () => import('@/views/Register')
 const Login = () => import('@/views/Login')
 const ForumLayout = () => import('@/layouts/ForumLayout')
+const Section = () => import('@/views/Section')
+const CreateThread = () => import('@/views/CreateThread')
+const Thread = () => import('@/views/Thread')
 
 Vue.use(Router)
 
@@ -38,12 +41,29 @@ const routes = [
       {
         path: '',
         component: ForumLayout,
-        name: 'ForumLayout',
         children: [
           {
             path: '',
             component: Home,
             name: 'Home'
+          },
+          {
+            path: 'section/:name',
+            component: Section,
+            name: 'Section',
+            props: true
+          },
+          {
+            path: 'section/:sectionName/create',
+            component: CreateThread,
+            name: 'CreateThread',
+            props: true
+          },
+          {
+            path: 'section/:sectionName/:id',
+            component: Thread,
+            name: 'Thread',
+            props: true
           }
         ]
       },

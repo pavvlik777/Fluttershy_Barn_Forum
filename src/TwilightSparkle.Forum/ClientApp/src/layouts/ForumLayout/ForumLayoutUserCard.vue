@@ -3,6 +3,7 @@
     <aside class="forum-layout-user-card__card">
       <div class="forum-layout-user-card__image-container">
         <input
+          v-if="userData"
           :accept="formats.join(',')"
           class="forum-layout-user-card__input"
           ref="fileInput"
@@ -59,7 +60,6 @@ export default {
       this.$emit('input', this.$refs.fileInput.files[0])
     },
     fileChanged (e) {
-      console.log(e)
       if (!e.target.files.length) {
         return
       }

@@ -13,7 +13,6 @@ export default {
       request.setRequestHeader('Authorization', `Bearer ${Vue.$cookies.get('token')}`)
       request.send(formData)
     } catch (e) {
-      console.log(e)
       window.location.reload()
     }
 

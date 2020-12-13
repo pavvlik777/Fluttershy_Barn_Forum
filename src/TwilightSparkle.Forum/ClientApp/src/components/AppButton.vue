@@ -63,7 +63,7 @@ export default {
 
   &--secondary {
     background-color: $mane-color;
-    border: 3px solid $fur-border;
+    border: 3px solid $mane-border;
 
     &:hover {
       background-color: darken($mane-color, 10%);

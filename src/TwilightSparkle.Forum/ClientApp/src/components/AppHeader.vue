@@ -9,7 +9,7 @@
     >
       Log Out
     </AppButton>
-    <navigation
+    <nav
       v-else
       class="app-header__navigation"
     >
@@ -19,7 +19,7 @@
     <AppLink :to="{ name: 'Login' }">
       Login
     </AppLink>
-    </navigation>
+    </nav>
   </header>
 </template>
 
