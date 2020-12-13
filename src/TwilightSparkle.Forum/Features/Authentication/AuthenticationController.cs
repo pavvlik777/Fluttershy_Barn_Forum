@@ -58,7 +58,8 @@ namespace TwilightSparkle.Forum.Features.Authentication
         {
             return errorType switch
             {
-                SignUpError.DuplicateUsername => BadRequest(new ErrorResponse("Invalid username")),
+                SignUpError.InvalidUsername => BadRequest(new ErrorResponse("Invalid username")),
+                SignUpError.DuplicateUsername => BadRequest(new ErrorResponse("Duplicate username")),
                 SignUpError.InvalidPassword => BadRequest(new ErrorResponse("Invalid password")),
                 SignUpError.InvalidEmail => BadRequest(new ErrorResponse("Invalid email")),
                 SignUpError.DuplicateEmail => BadRequest(new ErrorResponse("Duplicate email")),
