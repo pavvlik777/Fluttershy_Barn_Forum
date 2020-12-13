@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 
 using TwilightSparkle.Forum.Configurations;
@@ -12,6 +14,8 @@ using TwilightSparkle.Forum.DatabaseSeed;
 using TwilightSparkle.Forum.IdentityServer;
 using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
+
+using VueCliMiddleware;
 
 namespace TwilightSparkle.Forum
 {
@@ -86,6 +90,11 @@ namespace TwilightSparkle.Forum
             {
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             });
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext appContext)
@@ -96,6 +105,7 @@ namespace TwilightSparkle.Forum
             app.Use((context, next) => { context.Request.Scheme = "https"; return next(); });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseCookiePolicy();
 
             app.UseMiddleware<ErrorLoggerMiddleware>();
@@ -113,11 +123,26 @@ namespace TwilightSparkle.Forum
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
             });
 
+            if (env.IsStaging())
+            {
+                IdentityModelEventSource.ShowPII = true;
+            }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "API",
                     pattern: "api/{controller=Home}/{action=Index}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsStaging())
+                {
+                    spa.UseVueCli(npmScript: "serve", port: 8080);
+                }
             });
         }
     }

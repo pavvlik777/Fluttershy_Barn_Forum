@@ -12,8 +12,8 @@ namespace TwilightSparkle.Forum.Foundation.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private const string UsernamePattern = @"^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$";
-        private const string PasswordPattern = @"(?=^.{8,}$)(?=.*\d)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+        private const string UsernamePattern = @"^(?=.{5,20}$)[a-zA-Z0-9._]+$"; //5-20 symbols, [_, .], but only one in a row and can't be last or first symbol
+        private const string PasswordPattern = @"^(?=^.{8,}$)(?=.*\d)(?!.*\s)(?=.*[A-Z])(?=.*[a-z]).*$"; //8+ symbols, numeral, uppercase, under-case, without whitespaces
         private const string EmailPattern = @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
 
         private static readonly Regex UsernameRegex;
