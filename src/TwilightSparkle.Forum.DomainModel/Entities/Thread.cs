@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TwilightSparkle.Forum.DomainModel.Entities
 {
@@ -13,6 +14,8 @@ namespace TwilightSparkle.Forum.DomainModel.Entities
         public int AuthorId { get; set; }
 
         public User Author { get; set; }
+
+        public DateTime CreationDateTimeUtc { get; set; }
 
         public int SectionId { get; set; }
 

@@ -8,7 +8,7 @@ namespace TwilightSparkle.Forum.DomainModel.Entities
 
         public string Content { get; set; }
 
-        public DateTime CommentTime { get; set; }
+        public DateTime CommentTimeUtc { get; set; }
 
         public int AuthorId { get; set; }
 

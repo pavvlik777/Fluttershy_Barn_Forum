@@ -3,23 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
-using TwilightSparkle.Common.Hasher;
-using TwilightSparkle.Forum.Configurations;
 using TwilightSparkle.Forum.DatabaseSeed;
-using TwilightSparkle.Forum.Foundation.Authentication;
-using TwilightSparkle.Forum.Foundation.ImageService;
-using TwilightSparkle.Forum.Foundation.ImageStorage;
-using TwilightSparkle.Forum.Foundation.ThreadsManagement;
-using TwilightSparkle.Forum.Foundation.UserProfile;
+using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
-using TwilightSparkle.Forum.Repository.Interfaces;
-using TwilightSparkle.Forum.Repository.UnitOfWork;
 
 namespace TwilightSparkle.Forum
 {
@@ -37,32 +27,41 @@ namespace TwilightSparkle.Forum
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
+            services.AddSqlDatabase(connectionString);
 
-            services.AddScoped<DbContext, DatabaseContext>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IUserProfileService, UserProfileService>();
-            services.AddScoped<IImageStorageService, ImageStorageService>();
-            services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<IThreadsManagementService, ThreadsManagementService>();
+            services.AddCommon();
 
-            services.AddScoped<IForumUnitOfWork, ForumUnitOfWork>();
+            services.AddAuthenticationServices();
 
-            services.AddSingleton<IHasher, Sha256>();
+            services.AddUsersInfoServices();
+
+            services.AddThreadsSectionsManagementServices();
+
+            var imageStorageConfigurationSection = Configuration.GetSection("ImageStorage");
+            var firebaseImageStorageConfigurationSection = Configuration.GetSection("FirebaseImageStorage");
+            services.AddFirebaseImageServices(imageStorageConfigurationSection, firebaseImageStorageConfigurationSection);
+
+            services.AddSingleton(Configuration);
 
 
 
-            services.Configure<ImageStorageConfiguration>(Configuration.GetSection("ImageUploading"));
-            services.AddSingleton<IImageStorageConfiguration>(provider =>
+
+            services.AddSwaggerGen(c =>
             {
-                var imageUploadConfigOptions = provider.GetService<IOptions<ImageStorageConfiguration>>();
-                var imageUploadConfig = imageUploadConfigOptions.Value;
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API",
+                    Description = "Easy Money Domain API"
+                });
+            });
 
-                return imageUploadConfig;
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             });
 
 
-            services.AddSingleton(Configuration);
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => { options.LoginPath = new PathString("/Home/Login"); });
@@ -72,34 +71,37 @@ namespace TwilightSparkle.Forum
                     .RequireAuthenticatedUser()
                     .Build();
             });
-            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext appContext)
         {
             DatabaseMigrationSeed.SeedMigrateDatabase(appContext);
+            app.UseDeveloperExceptionPage();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
+            app.Use((context, next) => { context.Request.Scheme = "https"; return next(); });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseMiddleware<ErrorLoggerMiddleware>();
+
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseMiddleware<SwaggerAuthorizedMiddleware>();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+            });
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "API",
                     pattern: "api/{controller=Home}/{action=Index}");
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{*url}",
-                    defaults: new { controller = "App", action = "Index" });
             });
         }
     }

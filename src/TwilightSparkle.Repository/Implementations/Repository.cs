@@ -24,19 +24,24 @@ namespace TwilightSparkle.Repository.Implementations
         }
 
 
-        public async Task<IReadOnlyCollection<T>> GetWhereAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
+        public async Task<IReadOnlyCollection<T>> WhereAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
             return await GetQuery(includes).Where(expression).ToListAsync();
         }
 
-        public async Task<T> GetSingleOrDefaultAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
+        public async Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
             return await GetQuery(includes).SingleOrDefaultAsync(expression);
         }
 
-        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
             return await GetQuery(includes).FirstOrDefaultAsync(expression);
+        }
+
+        public IQueryable<T> All(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
+        {
+            return GetQuery(includes).Where(expression);
         }
 
         public void Create(T item)

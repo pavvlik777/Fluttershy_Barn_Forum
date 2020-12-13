@@ -43,39 +43,39 @@ namespace TwilightSparkle.Forum.Foundation.Authentication
         }
 
 
-        public async Task<ServiceResult<SignUpErrorType>> SignUpAsync(SignUpDto signUpDto)
+        public async Task<ServiceResult<SignUpError>> SignUp(SignUpDto signUpDto)
         {
             var isValidUsername = CheckIfValidUsername(signUpDto.Username);
             if (!isValidUsername)
             {
-                return ServiceResult.CreateFailed(SignUpErrorType.InvalidUsername);
+                return ServiceResult.CreateFailed(SignUpError.InvalidUsername);
             }
             var isValidPassword = CheckIfValidPassword(signUpDto.Password);
             if (!isValidPassword)
             {
-                return ServiceResult.CreateFailed(SignUpErrorType.InvalidPassword);
+                return ServiceResult.CreateFailed(SignUpError.InvalidPassword);
             }
             var isValidEmail = CheckIfValidEmail(signUpDto.Email);
             if (!isValidEmail)
             {
-                return ServiceResult.CreateFailed(SignUpErrorType.InvalidEmail);
+                return ServiceResult.CreateFailed(SignUpError.InvalidEmail);
             }
             var isValidPasswordConfirmation = signUpDto.PasswordConfirmation == signUpDto.Password;
             if (!isValidPasswordConfirmation)
             {
-                return ServiceResult.CreateFailed(SignUpErrorType.PasswordAndConfirmationNotSame);
+                return ServiceResult.CreateFailed(SignUpError.PasswordAndConfirmationNotSame);
             }
 
             var userRepository = _unitOfWork.UserRepository;
-            var duplicateUser = await userRepository.GetFirstOrDefaultAsync(u => u.Username == signUpDto.Username);
+            var duplicateUser = await userRepository.FirstOrDefaultAsync(u => u.Username == signUpDto.Username);
             if (duplicateUser != null)
             {
-                return ServiceResult.CreateFailed(SignUpErrorType.DuplicateUsername);
+                return ServiceResult.CreateFailed(SignUpError.DuplicateUsername);
             }
-            duplicateUser = await userRepository.GetFirstOrDefaultAsync(u => u.Email == signUpDto.Email);
+            duplicateUser = await userRepository.FirstOrDefaultAsync(u => u.Email == signUpDto.Email);
             if (duplicateUser != null)
             {
-                return ServiceResult.CreateFailed(SignUpErrorType.DuplicateEmail);
+                return ServiceResult.CreateFailed(SignUpError.DuplicateEmail);
             }
 
             var passwordHash = _hasher.GetHash(signUpDto.Password);
@@ -89,27 +89,7 @@ namespace TwilightSparkle.Forum.Foundation.Authentication
             userRepository.Create(newUser);
             await _unitOfWork.SaveAsync();
 
-            return ServiceResult<SignUpErrorType>.CreateSuccess();
-        }
-
-        public async Task<ServiceResult<SignInErrorType>> SignInAsync(string username, string password, bool rememberMe, SignInHandler signInHandler)
-        {
-            var userRepository = _unitOfWork.UserRepository;
-            var passwordHash = _hasher.GetHash(password);
-            var user = await userRepository.GetFirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == passwordHash);
-            if(user == null)
-            {
-                return ServiceResult.CreateFailed(SignInErrorType.InvalidCredentials);
-            }
-
-            await signInHandler(user.Username, user.Id, rememberMe);
-
-            return ServiceResult<SignInErrorType>.CreateSuccess();
-        }
-
-        public async Task SignOutAsync(SignOutHandler signOutHandler)
-        {
-            await signOutHandler();
+            return ServiceResult<SignUpError>.CreateSuccess();
         }
 
 

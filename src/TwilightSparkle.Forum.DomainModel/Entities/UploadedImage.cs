@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TwilightSparkle.Forum.DomainModel.Entities
+﻿namespace TwilightSparkle.Forum.DomainModel.Entities
 {
     public class UploadedImage
     {
