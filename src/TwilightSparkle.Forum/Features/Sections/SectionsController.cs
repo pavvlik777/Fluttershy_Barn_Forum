@@ -32,6 +32,7 @@ namespace TwilightSparkle.Forum.Features.Sections
         [HttpGet("info")]
         [ProducesResponseType(typeof(SectionsResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSections([FromQuery, Required] int? startIndex, [FromQuery, Required] int? size)
         {
             _logger.LogInformation("Getting sections");
@@ -55,6 +56,7 @@ namespace TwilightSparkle.Forum.Features.Sections
         [HttpGet("count")]
         [ProducesResponseType(typeof(SectionsCountResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSectionsCount()
         {
             _logger.LogInformation("Getting sections count");
@@ -78,6 +80,7 @@ namespace TwilightSparkle.Forum.Features.Sections
         [HttpGet("{sectionName}")]
         [ProducesResponseType(typeof(SectionThreadsInfoResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSectionThreads([FromRoute, Required] string sectionName,
             [FromQuery, Required] int? startIndex, [FromQuery, Required] int? size)
         {
@@ -102,6 +105,7 @@ namespace TwilightSparkle.Forum.Features.Sections
         [HttpGet("{sectionName}/count")]
         [ProducesResponseType(typeof(SectionThreadsCountResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSectionThreadsCount([FromRoute, Required] string sectionName)
         {
             _logger.LogInformation($"Getting section threads for section {sectionName}");
@@ -127,7 +131,7 @@ namespace TwilightSparkle.Forum.Features.Sections
         {
             return error switch
             {
-                GetSectionsError.InvalidPaginationArguments => NotFound(new ErrorResponse("Invalid pagination arguments")),
+                GetSectionsError.InvalidPaginationArguments => BadRequest(new ErrorResponse("Invalid pagination arguments")),
                 _ => throw new ArgumentOutOfRangeException(nameof(error), error, null),
             };
         }
@@ -144,8 +148,8 @@ namespace TwilightSparkle.Forum.Features.Sections
         {
             return error switch
             {
-                GetSectionThreadsInfoError.InvalidSection => NotFound(new ErrorResponse("Invalid section")),
-                GetSectionThreadsInfoError.InvalidPaginationArguments => NotFound(new ErrorResponse("Invalid pagination arguments")),
+                GetSectionThreadsInfoError.InvalidSection => BadRequest(new ErrorResponse("Invalid section")),
+                GetSectionThreadsInfoError.InvalidPaginationArguments => BadRequest(new ErrorResponse("Invalid pagination arguments")),
                 _ => throw new ArgumentOutOfRangeException(nameof(error), error, null),
             };
         }
@@ -154,7 +158,7 @@ namespace TwilightSparkle.Forum.Features.Sections
         {
             return error switch
             {
-                GetSectionThreadsCountError.InvalidSection => NotFound(new ErrorResponse("Invalid section")),
+                GetSectionThreadsCountError.InvalidSection => BadRequest(new ErrorResponse("Invalid section")),
                 _ => throw new ArgumentOutOfRangeException(nameof(error), error, null),
             };
         }

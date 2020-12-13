@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 using TwilightSparkle.Forum.DatabaseSeed;
-using TwilightSparkle.Forum.Foundation.ThreadsManagement;
-using TwilightSparkle.Forum.Foundation.UserProfile;
 using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
 
@@ -45,6 +44,24 @@ namespace TwilightSparkle.Forum
             services.AddSingleton(Configuration);
 
 
+
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API",
+                    Description = "Easy Money Domain API"
+                });
+            });
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            });
+
+
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => { options.LoginPath = new PathString("/Home/Login"); });
@@ -54,7 +71,6 @@ namespace TwilightSparkle.Forum
                     .RequireAuthenticatedUser()
                     .Build();
             });
-            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext appContext)

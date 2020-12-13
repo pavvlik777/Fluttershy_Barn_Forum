@@ -32,6 +32,7 @@ namespace TwilightSparkle.Forum.Features.Authentication
         [HttpPost("sign-up")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SignUp([FromBody, Required] SignUpRequest request)
         {
             _logger.LogInformation($"Creating new user with username - {request.Username}, email - {request.Email}");

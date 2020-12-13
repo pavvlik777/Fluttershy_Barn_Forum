@@ -81,6 +81,7 @@ namespace TwilightSparkle.Forum.Foundation.SectionsService
                 Amount = threads.Count,
                 Threads = threads.Select(t => new SectionThreadInfo
                 {
+                    Id = t.Id,
                     Title = t.Title,
                     CreationDateTimeUtc = t.CreationDateTimeUtc,
                     AuthorUsername = t.Author.Username

@@ -33,7 +33,8 @@ namespace TwilightSparkle.Forum.Features.Users
 
         [HttpGet("current/data")]
         [ProducesResponseType(typeof(UserInfo), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCurrent()
         {
             _logger.LogInformation($"Getting info for user with username - {User.Identity.Name}");
@@ -57,6 +58,8 @@ namespace TwilightSparkle.Forum.Features.Users
         [HttpGet("current/threads")]
         [ProducesResponseType(typeof(UserThreadsInfoResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCurrentThreads([FromQuery, Required] UserThreadsInfoRequest request)
         {
             _logger.LogInformation($"Getting threads info for user with username - {User.Identity.Name}");
@@ -80,6 +83,7 @@ namespace TwilightSparkle.Forum.Features.Users
         [HttpGet("current/threads/count")]
         [ProducesResponseType(typeof(UserThreadsCountResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCurrentThreadsCount()
         {
             _logger.LogInformation($"Getting threads count for user with username - {User.Identity.Name}");
@@ -103,6 +107,8 @@ namespace TwilightSparkle.Forum.Features.Users
         [HttpPatch("current/profile-image")]
         [ProducesResponseType(typeof(UserInfo), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateCurrentProfileImage([FromBody, Required] UpdateCurrentProfileImageRequest request)
         {
             _logger.LogInformation($"Updating profile image for user with username - {User.Identity.Name}");
@@ -138,7 +144,7 @@ namespace TwilightSparkle.Forum.Features.Users
             return error switch
             {
                 GetUserThreadsInfoError.NotFound => NotFound(new ErrorResponse("User not found")),
-                GetUserThreadsInfoError.InvalidPaginationArguments => NotFound(new ErrorResponse("Invalid pagination arguments")),
+                GetUserThreadsInfoError.InvalidPaginationArguments => BadRequest(new ErrorResponse("Invalid pagination arguments")),
                 _ => throw new ArgumentOutOfRangeException(nameof(error), error, null),
             };
         }
@@ -157,7 +163,7 @@ namespace TwilightSparkle.Forum.Features.Users
             return error switch
             {
                 UpdateProfileImageError.UserNotFound => NotFound(new ErrorResponse("User not found")),
-                UpdateProfileImageError.ImageNotFound => NotFound(new ErrorResponse("Image not found")),
+                UpdateProfileImageError.ImageNotFound => BadRequest(new ErrorResponse("Image not found")),
                 _ => throw new ArgumentOutOfRangeException(nameof(error), error, null),
             };
         }
