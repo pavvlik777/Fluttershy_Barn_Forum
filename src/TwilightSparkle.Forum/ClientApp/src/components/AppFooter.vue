@@ -18,6 +18,7 @@ export default {
   background-color: $mane-color;
   justify-content: center;
   z-index: 3;
+  border-top: 3px solid $mane-border;
 
   &__text {
     color: $black;

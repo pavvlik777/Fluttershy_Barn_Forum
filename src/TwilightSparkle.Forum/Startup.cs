@@ -13,10 +13,9 @@ using TwilightSparkle.Forum.IdentityServer;
 using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
 
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
+using Microsoft.IdentityModel.Logging;
 
 namespace TwilightSparkle.Forum
 {
@@ -125,6 +124,11 @@ namespace TwilightSparkle.Forum
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
             });
 
+            if (env.IsStaging())
+            {
+                IdentityModelEventSource.ShowPII = true;
+            }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -136,7 +140,7 @@ namespace TwilightSparkle.Forum
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
+                if (env.IsStaging())
                 {
                     spa.UseVueCli(npmScript: "serve", port: 8080);
                 }

@@ -9,14 +9,7 @@ const store = new Vuex.Store({
   },
   state: {
     userData: null,
-    isUserDataLoading: false,
-    roulette: {
-      currentBet: 0,
-      maxBetsCount: 0,
-      isBetConfirmed: false,
-      isGameFinished: false,
-      bets: []
-    }
+    isUserDataLoading: false
   },
   actions: {
     SET_USER_DATA: async function ({ commit }) {
@@ -35,27 +28,11 @@ const store = new Vuex.Store({
     },
     SET_LOADING: (state, isLoading) => {
       state.isUserDataLoading = isLoading
-    },
-    SET_BET: (state, currentBet) => {
-      state.roulette.isBetConfirmed = true
-      state.roulette.currentBet = currentBet
-      state.roulette.maxBetsCount = state.userData.moneyAmount / currentBet
-    },
-    RESET_BET: (state) => {
-      state.roulette.isBetConfirmed = false
-      state.roulette.currentBet = 0
-      state.roulette.maxBetsCount = 0
-      state.roulette.bets = []
-      state.roulette.isGameFinished = false
-    },
-    SET_BETS: (state, bets)  => {
-      state.roulette.bets = bets
     }
   },
   getters: {
     userData: state => state.userData,
-    isUserDataLoading: state => state.isUserDataLoading,
-    roulette: state => state.roulette
+    isUserDataLoading: state => state.isUserDataLoading
   }
 })
 

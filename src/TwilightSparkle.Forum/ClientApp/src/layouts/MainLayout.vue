@@ -21,6 +21,7 @@ export default {
   },
   created () {
     api.heartbeat.get.date()
+    api.authentication.post.refreshToken()
   }
 }
 </script>

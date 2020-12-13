@@ -10,5 +10,5 @@ module.exports = {
     resolve: {
       mainFiles: ['Index.vue', 'index']
     }
-  },
+  }
 }
