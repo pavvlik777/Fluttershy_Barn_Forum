@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 using TwilightSparkle.Forum.DomainModel.Entities;
+using TwilightSparkle.Forum.IdentityServer;
 using TwilightSparkle.Forum.Repository.DbContexts;
 
 namespace TwilightSparkle.Forum.DatabaseSeed
@@ -55,6 +56,34 @@ namespace TwilightSparkle.Forum.DatabaseSeed
                     Name = sectionName
                 };
                 appContext.Sections.Add(section);
+                appContext.SaveChanges();
+            }
+
+            var clients = appContext.Clients;
+            foreach (var client in Config.GetClients())
+            {
+                clients.Add(client);
+                appContext.SaveChanges();
+            }
+
+            var identityResources = appContext.IdentityResources;
+            foreach (var identityResource in Config.GetIdentityResources())
+            {
+                identityResources.Add(identityResource);
+                appContext.SaveChanges();
+            }
+
+            var apiResources = appContext.ApiResources;
+            foreach (var apiResource in Config.GetApiResources())
+            {
+                apiResources.Add(apiResource);
+                appContext.SaveChanges();
+            }
+
+            var apiScopes = appContext.ApiScopes;
+            foreach (var apiScope in Config.GetApiScopes())
+            {
+                apiScopes.Add(apiScope);
                 appContext.SaveChanges();
             }
         }
