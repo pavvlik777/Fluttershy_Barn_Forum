@@ -1,13 +1,15 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+using System;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
+using TwilightSparkle.Forum.Configurations;
 using TwilightSparkle.Forum.DatabaseSeed;
+using TwilightSparkle.Forum.IdentityServer;
 using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
 
@@ -43,8 +45,32 @@ namespace TwilightSparkle.Forum
 
             services.AddSingleton(Configuration);
 
+            var authOptions = new AuthOptions
+            {
+                Authority = Configuration[$"AuthOptions:{nameof(AuthOptions.Authority)}"],
+                Audience = Configuration[$"AuthOptions:{nameof(AuthOptions.Audience)}"]
+            };
+            services.AddIdentityServer(options =>
+            {
+                options.IssuerUri = authOptions.Authority;
+            })
+                .AddDeveloperSigningCredential()
+                .AddRequiredServices()
+                .AddRepositories()
+                .AddClients()
+                .AddIdentityApiResources()
+                .AddUsers();
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = authOptions.Authority;
 
+                    options.Audience = authOptions.Audience;
+
+                    options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
+                    options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+                });
 
             services.AddSwaggerGen(c =>
             {
@@ -52,24 +78,13 @@ namespace TwilightSparkle.Forum
                 {
                     Version = "v1",
                     Title = "API",
-                    Description = "Easy Money Domain API"
+                    Description = "Forum API"
                 });
             });
 
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-            });
-
-
-            services.AddMvc(options => options.EnableEndpointRouting = false);
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => { options.LoginPath = new PathString("/Home/Login"); });
-            services.AddAuthorization(options =>
-            {
-                options.DefaultPolicy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
             });
         }
 
@@ -87,6 +102,7 @@ namespace TwilightSparkle.Forum
 
             app.UseRouting();
 
+            app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
 
