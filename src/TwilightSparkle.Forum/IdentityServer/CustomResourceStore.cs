@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 
+using Microsoft.Extensions.Configuration;
+
 using TwilightSparkle.Forum.IdentityServer.Mappers;
 using TwilightSparkle.Repository.Interfaces;
 
@@ -29,28 +31,40 @@ namespace TwilightSparkle.Forum.IdentityServer
 
         public async Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
         {
-            var list = await _apiResourceRepository.WhereAsync(a => apiResourceNames.Contains(a.Name));
+            var list = await _apiResourceRepository.WhereAsync(a => apiResourceNames.Contains(a.Name),
+                x => x.Secrets,
+                x => x.Scopes,
+                x => x.UserClaims,
+                x => x.Properties);
 
             return list.Select(r => r.ToModel()).ToList();
         }
 
         public async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
-            var list = await _apiResourceRepository.WhereAsync(a => a.Scopes.Any(s => scopeNames.Contains(s.Scope)));
+            var list = await _apiResourceRepository.WhereAsync(a => a.Scopes.Any(s => scopeNames.Contains(s.Scope)),
+                x => x.Secrets,
+                x => x.Scopes,
+                x => x.UserClaims,
+                x => x.Properties);
 
             return list.Select(r => r.ToModel()).ToList();
         }
 
         public async Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
         {
-            var list = await _apiScopeRepository.WhereAsync(s => scopeNames.Contains(s.Name));
+            var list = await _apiScopeRepository.WhereAsync(s => scopeNames.Contains(s.Name),
+                x => x.UserClaims,
+                x => x.Properties);
 
             return list.Select(r => r.ToModel()).ToList();
         }
 
         public async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
-            var list = await _identityResourceRepository.WhereAsync(e => scopeNames.Contains(e.Name));
+            var list = await _identityResourceRepository.WhereAsync(e => scopeNames.Contains(e.Name),
+                x => x.UserClaims,
+                x => x.Properties);
 
             return list.Select(r => r.ToModel()).ToList();
         }
@@ -65,17 +79,25 @@ namespace TwilightSparkle.Forum.IdentityServer
 
         private IEnumerable<ApiResource> GetAllApiResources()
         {
-            return _apiResourceRepository.All(null).Select(r => r.ToModel()).ToList();
+            return _apiResourceRepository.All(null,
+                x => x.Secrets,
+                x => x.Scopes,
+                x => x.UserClaims,
+                x => x.Properties).Select(r => r.ToModel()).ToList();
         }
 
         private IEnumerable<IdentityResource> GetAllIdentityResources()
         {
-            return _identityResourceRepository.All(null).Select(r => r.ToModel()).ToList();
+            return _identityResourceRepository.All(null,
+                x => x.UserClaims,
+                x => x.Properties).Select(r => r.ToModel()).ToList();
         }
 
         private IEnumerable<ApiScope> GetAllApiScopes()
         {
-            return _apiScopeRepository.All(null).Select(r => r.ToModel()).ToList();
+            return _apiScopeRepository.All(null,
+                x => x.UserClaims,
+                x => x.Properties).Select(r => r.ToModel()).ToList();
         }
     }
 }
