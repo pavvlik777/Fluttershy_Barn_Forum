@@ -6,6 +6,9 @@ const MainLayout = () => import('@/layouts/MainLayout')
 const Home = () => import('@/views/Home')
 const Error404 = () => import('@/views/Errors/Error404')
 const Error500 = () => import('@/views/Errors/Error500')
+const Register = () => import('@/views/Register')
+const Login = () => import('@/views/Login')
+const ForumLayout = () => import('@/layouts/ForumLayout')
 
 Vue.use(Router)
 
@@ -34,8 +37,15 @@ const routes = [
     children:  [
       {
         path: '',
-        component: Home,
-        name: 'Home'
+        component: ForumLayout,
+        name: 'ForumLayout',
+        children: [
+          {
+            path: '',
+            component: Home,
+            name: 'Home'
+          }
+        ]
       },
       {
         path: '404',
@@ -46,6 +56,16 @@ const routes = [
         path: '500',
         component: Error500,
         name: 'Error500'
+      },
+      {
+        path: 'register',
+        component: Register,
+        name: 'Register'
+      },
+      {
+        path: 'login',
+        component: Login,
+        name: 'Login'
       }
     ]
   },

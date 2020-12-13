@@ -46,7 +46,7 @@ export default {
 .app-button {
   width: fit-content;
   padding: 5px 10px;
-  border: 3px solid $fur-border;
+  border: 3px solid $mane-border;
   border-radius: 4px;
   background-color: $fur-color;
   cursor: pointer;
@@ -63,7 +63,7 @@ export default {
 
   &--secondary {
     background-color: $mane-color;
-    border: 1px solid $mane-border;
+    border: 3px solid $fur-border;
 
     &:hover {
       background-color: darken($mane-color, 10%);

@@ -23,7 +23,7 @@ const api = {
   authentication: {
     post: {
       signUp (model) {
-        return axios.post('authentication/sign-up', model)
+        return axios.post('api/authentication/sign-up', model)
       },
       token (model) {
         const data = {
@@ -57,6 +57,30 @@ const api = {
     }
   },
   users: {
+    get: {
+      userData () {
+        return axios.get('api/users/current/data')
+      }
+    },
+    patch: {
+      image (imageExternalId) {
+        return axios.patch('api/users/current/profile-image', { imageExternalId })
+      }
+    }
+  },
+  sections: {
+    get: {
+      sections () {
+        return axios.get('api/sections/info?startIndex=0&size=100')
+      }
+    }
+  },
+  images: {
+    get: {
+      byId (id) {
+        return axios.get(`api/images/${id}`)
+      }
+    }
   }
 }
 

@@ -35,12 +35,14 @@ export default {
   },
   computed: {
     isLoggedIn () {
-      return true
+      return this.$store.getters.userData
     }
   },
   methods: {
     onLogout () {
-      console.log('on-logout')
+      this.$cookies.remove('token')
+      this.$cookies.remove('refresh-token')
+      this.$store.commit('SET_USER_DATA', { userData: null })
     }
   }
 }
@@ -59,6 +61,13 @@ export default {
   .app-button {
     font-size: 15px;
     font-weight: 500;
+  }
+
+  &__navigation {
+    display: flex;
+    & > * + * {
+      margin-left: 15px;
+    }
   }
 
   &__text {

@@ -5,6 +5,7 @@ $fur-border: #e9d45d;
 $cutiemark-color: #7bc1c3;
 $eye-color: #00a39c;
 $black: #000000;
+$fur-color-shadow: #ffe78f;
 
 $font-size-default: 13px;
 
@@ -15,6 +16,8 @@ $font-weight-bold: 700 !default;
 
 $transparent: rgba($color: white, $alpha: 0) !default;
 $screen-phone-6: 480px !default;
+
+$footer-height: 30px;
 
 body,
 input,
@@ -52,4 +55,8 @@ html {
     left: calc(50% - 256px);
     z-index: 1;
   }
+}
+
+#app {
+  height: 100%;
 }
