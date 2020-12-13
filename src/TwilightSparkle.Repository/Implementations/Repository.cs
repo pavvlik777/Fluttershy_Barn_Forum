@@ -41,6 +41,11 @@ namespace TwilightSparkle.Repository.Implementations
 
         public IQueryable<T> All(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
         {
+            if(expression == null)
+            {
+                return GetQuery(includes);
+            }
+
             return GetQuery(includes).Where(expression);
         }
 
