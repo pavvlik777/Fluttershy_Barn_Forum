@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
 
 using TwilightSparkle.Forum.Configurations;
@@ -13,9 +15,7 @@ using TwilightSparkle.Forum.IdentityServer;
 using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
 
-using Microsoft.Extensions.Hosting;
 using VueCliMiddleware;
-using Microsoft.IdentityModel.Logging;
 
 namespace TwilightSparkle.Forum
 {
@@ -91,7 +91,6 @@ namespace TwilightSparkle.Forum
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             });
 
-            // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
