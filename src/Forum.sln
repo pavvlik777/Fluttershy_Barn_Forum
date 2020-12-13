@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Forum", "Forum", "{51BB1999
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwilightSparkle.Firebase.Storage", "TwilightSparkle.Firebase.Storage\TwilightSparkle.Firebase.Storage.csproj", "{5F931E5C-99F7-4019-A963-AC1DAE8921EC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Forum.Tests", "Forum.Tests", "{BCF14228-1819-451B-A1EC-89AB772E6464}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwilightSparkle.Forum.UnitTests", "TwilightSparkle.Forum.UnitTests\TwilightSparkle.Forum.UnitTests.csproj", "{B746A2E5-DBC0-461D-9FE9-82D5B91B8806}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,10 @@ Global
 		{5F931E5C-99F7-4019-A963-AC1DAE8921EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F931E5C-99F7-4019-A963-AC1DAE8921EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F931E5C-99F7-4019-A963-AC1DAE8921EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B746A2E5-DBC0-461D-9FE9-82D5B91B8806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B746A2E5-DBC0-461D-9FE9-82D5B91B8806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B746A2E5-DBC0-461D-9FE9-82D5B91B8806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B746A2E5-DBC0-461D-9FE9-82D5B91B8806}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +75,7 @@ Global
 		{BA32D590-BAE2-4465-A2A0-737B79459D4C} = {51BB1999-244A-4267-8B62-8FD9BB324720}
 		{5BD6D376-6E0A-4214-8984-2E7E86144478} = {51BB1999-244A-4267-8B62-8FD9BB324720}
 		{5F931E5C-99F7-4019-A963-AC1DAE8921EC} = {44EBE5FB-0D68-4D71-B3A3-02032F6CE610}
+		{B746A2E5-DBC0-461D-9FE9-82D5B91B8806} = {BCF14228-1819-451B-A1EC-89AB772E6464}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7338EF0B-C58C-4D3A-8D6B-EE686152806C}
