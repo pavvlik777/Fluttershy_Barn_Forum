@@ -13,6 +13,11 @@ using TwilightSparkle.Forum.IdentityServer;
 using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
 
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.Extensions.Hosting;
+using VueCliMiddleware;
+
 namespace TwilightSparkle.Forum
 {
     public class Startup
@@ -86,6 +91,12 @@ namespace TwilightSparkle.Forum
             {
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             });
+
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext appContext)
@@ -96,6 +107,7 @@ namespace TwilightSparkle.Forum
             app.Use((context, next) => { context.Request.Scheme = "https"; return next(); });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseCookiePolicy();
 
             app.UseMiddleware<ErrorLoggerMiddleware>();
@@ -118,6 +130,16 @@ namespace TwilightSparkle.Forum
                 endpoints.MapControllerRoute(
                     name: "API",
                     pattern: "api/{controller=Home}/{action=Index}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseVueCli(npmScript: "serve", port: 8080);
+                }
             });
         }
     }
