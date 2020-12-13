@@ -11,7 +11,7 @@ namespace TwilightSparkle.Forum.UnitTests
     {
         public static async Task<HttpResponseMessage> and_get(this HttpClient httpClient, string uri)
         {
-            return await httpClient.GetAsync($"http://localhost/{uri}");
+            return await httpClient.GetAsync(new Uri($"{uri}", UriKind.Relative));
         }
 
         public static async Task<HttpResponseMessage> and_post(this HttpClient httpClient, string uri, object payload)
@@ -23,7 +23,7 @@ namespace TwilightSparkle.Forum.UnitTests
 
             var message = new HttpRequestMessage
             {
-                RequestUri = new Uri($"http://localhost/{uri}"),
+                RequestUri = new Uri($"{uri}", UriKind.Relative),
                 Method = HttpMethod.Post,
                 Content = byteContent,
             };

@@ -17,7 +17,7 @@ namespace Heartbeat.when_calling_heartbeat
         protected override async Task Setup()
         {
             _result = await connect_to.easy_money_domain_api_()
-                .execute(client => client.GetAsync("/heartbeat"));
+                .execute(client => client.and_get("/api/heartbeat/date"));
         }
 
         [Fact]

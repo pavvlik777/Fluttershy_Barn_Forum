@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 
 using TwilightSparkle.Common.Hasher;
+using TwilightSparkle.Forum.Repository.DbContexts;
 using TwilightSparkle.Forum.Repository.Interfaces;
 
 namespace TwilightSparkle.Forum.UnitTests
@@ -54,10 +56,10 @@ namespace TwilightSparkle.Forum.UnitTests
             var hostBuilder = new HostBuilder()
                 .ConfigureWebHostDefaults(c =>
                 {
-                    c.UseEnvironment(Environments.Staging);
+                    c.UseEnvironment("Testing");
                     c.ConfigureAppConfiguration(x => x.AddJsonFile("appsettings.json"));
                     c.UseTestServer();
-                    c.UseStartup<Startup>();
+                    c.UseStartup<TestStartup>();
 
                     c.ConfigureTestServices(sc =>
                     {
@@ -66,6 +68,16 @@ namespace TwilightSparkle.Forum.UnitTests
 
                         sc.RemoveAll(typeof(ILogger));
                         sc.AddSingleton(Mock.Of<ILogger>());
+
+                        var options = new DbContextOptionsBuilder<DatabaseContext>()
+                            .UseInMemoryDatabase(databaseName: "TMP")
+                            .Options;
+
+                        var ctx = new DatabaseContext(options);
+
+                        sc.RemoveAll(typeof(DbContext));
+                        sc.AddSingleton<DbContext>(ctx);
+                        sc.AddSingleton<DatabaseContext>(ctx);
 
                         sc.AddSingleton(connectionConfig.Hasher);
                         sc.AddSingleton(connectionConfig.UnitOfWork);
