@@ -1,0 +1,55 @@
+$mane-color: #f2b6cf;
+$mane-border: #e885b4;
+$fur-color: #fdf5ae;
+$fur-border: #e9d45d;
+$cutiemark-color: #7bc1c3;
+$eye-color: #00a39c;
+$black: #000000;
+
+$font-size-default: 13px;
+
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 600 !default;
+$font-weight-bold: 700 !default;
+
+$transparent: rgba($color: white, $alpha: 0) !default;
+$screen-phone-6: 480px !default;
+
+body,
+input,
+button {
+  font-family: 'Open Sans', sans-serif;
+  font-size: $font-size-default;
+  color: $black;
+  background-color: $fur-color;
+}
+
+body {
+  margin: 0;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+.loading {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  * {
+    visibility: hidden;
+  }
+
+  &::before {
+    content: url('/loading.gif');
+    width: 512px;  
+    position: absolute;
+    top: calc(40% - 256px);
+    left: calc(50% - 256px);
+    z-index: 1;
+  }
+}

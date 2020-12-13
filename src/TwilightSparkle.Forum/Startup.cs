@@ -13,6 +13,10 @@ using TwilightSparkle.Forum.IdentityServer;
 using TwilightSparkle.Forum.Middlewares;
 using TwilightSparkle.Forum.Repository.DbContexts;
 
+using Microsoft.Extensions.Hosting;
+using VueCliMiddleware;
+using Microsoft.IdentityModel.Logging;
+
 namespace TwilightSparkle.Forum
 {
     public class Startup
@@ -86,6 +90,12 @@ namespace TwilightSparkle.Forum
             {
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             });
+
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext appContext)
@@ -96,6 +106,7 @@ namespace TwilightSparkle.Forum
             app.Use((context, next) => { context.Request.Scheme = "https"; return next(); });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseCookiePolicy();
 
             app.UseMiddleware<ErrorLoggerMiddleware>();
@@ -113,11 +124,26 @@ namespace TwilightSparkle.Forum
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
             });
 
+            if (env.IsStaging())
+            {
+                IdentityModelEventSource.ShowPII = true;
+            }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "API",
                     pattern: "api/{controller=Home}/{action=Index}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsStaging())
+                {
+                    spa.UseVueCli(npmScript: "serve", port: 8080);
+                }
             });
         }
     }
