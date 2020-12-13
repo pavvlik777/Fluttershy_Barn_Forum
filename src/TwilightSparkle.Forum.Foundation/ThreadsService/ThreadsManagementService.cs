@@ -95,14 +95,14 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsService
         {
             var sectionRepository = _unitOfWork.GetRepository<Section>();
             var section = await sectionRepository.FirstOrDefaultAsync(s => s.Name == request.SectionName);
-            if (section != null)
+            if (section == null)
             {
                 return ServiceResult<ThreadInfo, CreateThreadError>.CreateFailed(CreateThreadError.SectionNotFound);
             }
 
             var userRepository = _unitOfWork.GetRepository<User>();
             var author = await userRepository.FirstOrDefaultAsync(s => s.Username == request.AuthorUsername);
-            if (author != null)
+            if (author == null)
             {
                 return ServiceResult<ThreadInfo, CreateThreadError>.CreateFailed(CreateThreadError.UserNotFound);
             }
@@ -150,7 +150,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsService
         {
             var userRepository = _unitOfWork.GetRepository<User>();
             var user = await userRepository.FirstOrDefaultAsync(s => s.Username == username);
-            if (user != null)
+            if (user == null)
             {
                 return ServiceResult<DeleteThreadError>.CreateFailed(DeleteThreadError.UserNotFound);
             }
@@ -178,7 +178,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsService
         {
             var userRepository = _unitOfWork.GetRepository<User>();
             var user = await userRepository.FirstOrDefaultAsync(s => s.Username == username);
-            if (user != null)
+            if (user == null)
             {
                 return ServiceResult<ThreadInfo, LikeDislikeThreadError>.CreateFailed(LikeDislikeThreadError.UserNotFound);
             }
@@ -289,7 +289,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsService
         {
             var userRepository = _unitOfWork.GetRepository<User>();
             var user = await userRepository.FirstOrDefaultAsync(s => s.Username == request.AuthorUsername);
-            if (user != null)
+            if (user == null)
             {
                 return ServiceResult<ThreadCommentInfo, CommentThreadError>.CreateFailed(CommentThreadError.UserNotFound);
             }
