@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using TwilightSparkle.Common.Hasher;
 using TwilightSparkle.Forum.Configurations;
+using TwilightSparkle.Forum.Foundation.Authentication;
 using TwilightSparkle.Forum.Foundation.ImageStorage;
 using TwilightSparkle.Forum.Foundation.SectionsService;
 using TwilightSparkle.Forum.Foundation.ThreadsService;
