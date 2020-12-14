@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using TwilightSparkle.Common.Hasher;
@@ -21,7 +22,9 @@ namespace TwilightSparkle.Forum
         public static IServiceCollection AddSqlDatabase(this IServiceCollection services,
             string connectionString)
         {
-            services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<DatabaseContext>(options => options
+                .UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+                .UseSqlServer(connectionString));
             services.AddScoped<DbContext, DatabaseContext>();
 
             services.AddScoped<IForumUnitOfWork, ForumUnitOfWork>();
