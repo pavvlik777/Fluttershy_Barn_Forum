@@ -21,15 +21,16 @@ $footer-height: 30px;
 
 body,
 input,
+textarea,
 button {
   font-family: 'Open Sans', sans-serif;
   font-size: $font-size-default;
   color: $black;
-  background-color: $fur-color;
 }
 
 body {
   margin: 0;
+  background-color: $fur-color;
 }
 
 body,

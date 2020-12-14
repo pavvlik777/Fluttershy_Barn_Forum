@@ -60,6 +60,9 @@ const api = {
     get: {
       userData () {
         return axios.get('/api/users/current/data')
+      },
+      threads (startIndex, size) {
+        return axios.get(`/api/users/current/threads?startIndex=${startIndex}&size=${size}`)
       }
     },
     patch: {
@@ -107,6 +110,9 @@ const api = {
       },
       comments (startIndex, size, threadId) {
         return axios.get(`/api/threads/${threadId}/comments?startIndex=${startIndex}&size=${size}`)
+      },
+      popular (startIndex, size) {
+        return axios.get(`/api/threads/popular?startIndex=${startIndex}&size=${size}`)
       }
     },
     delete: {

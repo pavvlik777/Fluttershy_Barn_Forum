@@ -12,6 +12,8 @@
     <AppButton @click="onCreate">
       Create
     </AppButton>
+    <h3> Preview: </h3>
+    <div v-html="contentPreview" />
   </article>
 </template>
 
@@ -19,6 +21,7 @@
 import AppInput from '@/components/AppInput'
 import AppButton from '@/components/AppButton'
 import api from '@/api'
+import marked from 'marked'
 
 export default {
   components: {
@@ -35,7 +38,12 @@ export default {
   data () {
     return {
       title: '',
-      content: ''
+      content: '',
+    }
+  },
+  computed: {
+    contentPreview () {
+      return marked(this.content)
     }
   },
   methods: {
@@ -58,6 +66,7 @@ export default {
         this.$route.replace({ name: 'Error500' })
       } finally {
         this.$store.commit('SET_LOADING', false)
+        this.$emit('update')
       }
     }
   }
