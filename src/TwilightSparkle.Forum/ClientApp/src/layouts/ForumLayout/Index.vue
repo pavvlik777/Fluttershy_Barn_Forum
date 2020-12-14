@@ -46,6 +46,14 @@ export default {
   computed: {
     isLoading () {
       return this.$store.getters.isLoading
+    },
+    isAuthorized () {
+      return this.$store.getters.userData
+    }
+  },
+  watch: {
+    isAuthorized () {
+      this.onUpdate()
     }
   },
   async created () {
