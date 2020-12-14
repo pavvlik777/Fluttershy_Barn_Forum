@@ -12,6 +12,8 @@ namespace TwilightSparkle.Forum.Features.Threads.Models
 
         public string AuthorUsername { get; set; }
 
+        public string SectionName { get; set; }
+
         public DateTime CreationDateTimeUtc { get; set; }
 
         public int LikesDislikes { get; set; }
@@ -22,6 +24,7 @@ namespace TwilightSparkle.Forum.Features.Threads.Models
             Id = threadInfo.Id;
             Title = threadInfo.Title;
             AuthorUsername = threadInfo.AuthorUsername;
+            SectionName = threadInfo.SectionName;
             CreationDateTimeUtc = threadInfo.CreationDateTimeUtc;
             LikesDislikes = threadInfo.LikesDislikes;
         }

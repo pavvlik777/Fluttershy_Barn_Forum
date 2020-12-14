@@ -31,7 +31,7 @@ namespace TwilightSparkle.Forum.Foundation.ThreadsService
             }
 
             var threadRepository = _unitOfWork.GetRepository<Thread>();
-            var threads = await threadRepository.All(null, t => t.Likes, t => t.Author)
+            var threads = await threadRepository.All(null, t => t.Likes, t => t.Author, t => t.Section)
                 .OrderByDescending(t => t.Likes.Where(l => l.IsLike).Count() - t.Likes.Where(l => !l.IsLike).Count())
                 .OrderByDescending(t => t.CreationDateTimeUtc).Skip(startIndex).Take(size).ToListAsync();
             var result = new ThreadsInfo
