@@ -154,6 +154,7 @@ export default {
         this.$router.replace({ name: 'Error500' })
       } finally {
         this.$store.commit('SET_LOADING', false)
+        this.$emit('update')
       }
     },
     async onRate (isPositive) {

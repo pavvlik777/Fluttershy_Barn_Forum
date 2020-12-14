@@ -25,16 +25,46 @@
         Email: {{ userData.email }}
       </span>
     </aside>
+    <ul class="forum-layout-user-card__list">
+      <li
+        v-for="thread in threads"
+        :key="thread.id"
+        class="forum-layout-user-card__list-item"
+      >
+        <SectionThread
+          v-bind="thread"
+          @click="() => onOpenThread(thread)"
+        />
+      </li>
+      <li
+        v-if="isAdditionalLoadRequired"
+        class="forum-layout-user-card__item-loading loading"
+      />
+    </ul>
   </div>
 </template>
 
 <script>
+import SectionThread from '@/components/ThreadItem'
 import userImage from '@/assets/user.png'
 
 const formats = ['.jpg', '.png', '.jpeg']
 
 export default {
   name: 'ForumLayoutUserCard',
+  components: {
+    SectionThread
+  },
+  props: {
+    threads: {
+      type: Array,
+      default: () => []
+    },
+    isAdditionalLoadRequired: {
+      type: Boolean,
+      deafult: false
+    }
+  },
   data () {
     return {
       formats
@@ -70,6 +100,15 @@ export default {
       reader.onload = this.onFileLoad
       reader.readAsDataURL(formData)
     },
+    onOpenThread (thread) {
+      this.$router.push({
+        name: 'Thread',
+        params: {
+          sectionName: thread.sectionName,
+          id: thread.id
+        }
+      })
+    }
   }
 }
 </script>
@@ -108,6 +147,26 @@ export default {
   &__image-container {
     position: relative;
     align-self: center;
+  }
+
+  &__item-loading.loading {
+    display: block;
+    width: 300px;
+    height: 335px;
+    position: relative;
+
+    &::before {
+      transform: scale(0.5);
+    }
+  }
+
+  &__list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  &__list-item {
+    margin: 5px 0;
   }
 }
 </style>

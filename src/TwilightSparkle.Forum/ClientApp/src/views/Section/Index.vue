@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import SectionThread from './SectionThread'
+import SectionThread from '@/components/ThreadItem'
 import api from '@/api'
 
 const defaultCount = 100

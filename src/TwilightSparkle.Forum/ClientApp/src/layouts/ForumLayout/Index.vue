@@ -7,8 +7,11 @@
     <router-view
       :class="{ 'loading': isLoading }"
       class="forum-layout__view"
+      @update="onUpdate"
     />
     <ForumLayoutUserCard
+      :is-additional-load-required="isAdditionalLoadRequired"
+      :threads="userThreads"
       class="forum-layout__user-card"
       @input="onImageInput"
     />
@@ -21,6 +24,10 @@ import ForumLayoutUserCard from './ForumLayoutUserCard'
 import api from '@/api'
 import { imagesHelper } from '@/utils'
 
+const defaultCount = 100
+const delta = 300
+
+
 export default {
   name: 'ForumLayout',
   components: {
@@ -29,7 +36,11 @@ export default {
   },
   data () {
     return {
-      sections: []
+      sections: [],
+      nextIndex: 0,
+      userThreads: [],
+      isThreadsLoading: false,
+      isAdditionalLoadRequired: true
     }
   },
   computed: {
@@ -40,9 +51,14 @@ export default {
   async created () {
     this.$store.commit('SET_MAIN_LOADING', true)
     await Promise.all([
-      this.setSections()
+      this.setSections(),
+      this.loadThreads()
     ])
     this.$store.commit('SET_MAIN_LOADING', false)
+    window.addEventListener('scroll', this.onScroll)
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.onScroll)
   },
   methods: {
     async setSections () {
@@ -65,6 +81,35 @@ export default {
       } catch {
         this.$router.replace({ name: 'Error500' })
       }
+    },
+    async onScroll () {
+      const html = document.documentElement
+
+      if (html.scrollTop + html.offsetHeight + delta >= html.scrollHeight && !this.isThreadsLoading && this.isAdditionalLoadRequired) {
+        await this.loadTransactions()
+      }
+    },
+    async loadThreads () {
+      try {
+        this.isThreadsLoading = true
+        const response = await api.users.get.threads(this.nextIndex, defaultCount)
+        const { threadsInfo } = response.data
+        this.userThreads.push(...threadsInfo)
+        this.isAdditionalLoadRequired &&= threadsInfo.length === defaultCount
+        this.nextIndex += defaultCount
+      } catch {
+        this.isAdditionalLoadRequired = false
+        // Igonre
+      } finally {
+        this.isThreadsLoading = false
+      }
+    },
+    async onUpdate () {
+      this.nextIndex = 0
+      this.userThreads = []
+      this.isThreadsLoading = false
+      this.isAdditionalLoadRequired = true
+      await this.loadThreads()
     }
   }
 }
