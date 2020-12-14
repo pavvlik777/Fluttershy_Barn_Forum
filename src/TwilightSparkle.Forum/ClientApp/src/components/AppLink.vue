@@ -22,7 +22,7 @@ export default {
 <style lang="scss">
 .app-link {
   padding: 5px;
-  border: 1px solid $fur-border;
+  border: 3px solid $mane-border;
   border-radius: 4px;
   background-color: $fur-color;
   color: $black;

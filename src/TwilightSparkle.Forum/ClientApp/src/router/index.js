@@ -6,6 +6,12 @@ const MainLayout = () => import('@/layouts/MainLayout')
 const Home = () => import('@/views/Home')
 const Error404 = () => import('@/views/Errors/Error404')
 const Error500 = () => import('@/views/Errors/Error500')
+const Register = () => import('@/views/Register')
+const Login = () => import('@/views/Login')
+const ForumLayout = () => import('@/layouts/ForumLayout')
+const Section = () => import('@/views/Section')
+const CreateThread = () => import('@/views/CreateThread')
+const Thread = () => import('@/views/Thread')
 
 Vue.use(Router)
 
@@ -34,8 +40,32 @@ const routes = [
     children:  [
       {
         path: '',
-        component: Home,
-        name: 'Home'
+        component: ForumLayout,
+        children: [
+          {
+            path: '',
+            component: Home,
+            name: 'Home'
+          },
+          {
+            path: 'section/:name',
+            component: Section,
+            name: 'Section',
+            props: true
+          },
+          {
+            path: 'section/:sectionName/create',
+            component: CreateThread,
+            name: 'CreateThread',
+            props: true
+          },
+          {
+            path: 'section/:sectionName/:id',
+            component: Thread,
+            name: 'Thread',
+            props: true
+          }
+        ]
       },
       {
         path: '404',
@@ -46,6 +76,16 @@ const routes = [
         path: '500',
         component: Error500,
         name: 'Error500'
+      },
+      {
+        path: 'register',
+        component: Register,
+        name: 'Register'
+      },
+      {
+        path: 'login',
+        component: Login,
+        name: 'Login'
       }
     ]
   },
