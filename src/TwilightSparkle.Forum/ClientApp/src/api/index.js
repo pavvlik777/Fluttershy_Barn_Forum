@@ -23,7 +23,7 @@ const api = {
   authentication: {
     post: {
       signUp (model) {
-        return axios.post('authentication/sign-up', model)
+        return axios.post('/api/authentication/sign-up', model)
       },
       token (model) {
         const data = {
@@ -32,7 +32,7 @@ const api = {
           grant_type: 'password'
         }
 
-        return axios.post('connect/token', qs.stringify(data), {
+        return axios.post('/connect/token', qs.stringify(data), {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
       },
@@ -43,7 +43,7 @@ const api = {
           refresh_token: Vue.$cookies.get('refresh-token')
         }
 
-        return axios.post('connect/token', qs.stringify(data), {
+        return axios.post('/connect/token', qs.stringify(data), {
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         })
       }
@@ -52,11 +52,68 @@ const api = {
   heartbeat: {
     get: {
       date () {
-        return axios.get('api/heartbeat/date')
+        return axios.get('/api/heartbeat/date')
       }
     }
   },
   users: {
+    get: {
+      userData () {
+        return axios.get('/api/users/current/data')
+      }
+    },
+    patch: {
+      image (imageExternalId) {
+        return axios.patch('/api/users/current/profile-image', { imageExternalId })
+      }
+    }
+  },
+  sections: {
+    get: {
+      sections () {
+        return axios.get('/api/sections/info?startIndex=0&size=100')
+      },
+      byName (startIndex, size, sectionName) {
+        return axios.get(`/api/sections/${sectionName}?startIndex=${startIndex}&size=${size}`)
+      }
+    }
+  },
+  images: {
+    get: {
+      byId (id) {
+        return axios.get(`/api/images/${id}`)
+      }
+    }
+  },
+  threads: {
+    post: {
+      create (model) {
+        return axios.post('/api/threads/create', model)
+      },
+      comment (id, model) {
+        return axios.post(`/api/threads/${id}/comments/create`, model)
+      },
+      rate (id, isPositive) {
+        const prefix = isPositive
+          ? ''
+          : 'dis'
+
+        return axios.post(`/api/threads/${id}/${prefix}like`)
+      }
+    },
+    get: {
+      byId (id) {
+        return axios.get(`/api/threads/${id}`)
+      },
+      comments (startIndex, size, threadId) {
+        return axios.get(`/api/threads/${threadId}/comments?startIndex=${startIndex}&size=${size}`)
+      }
+    },
+    delete: {
+      thread (id) {
+        return axios.delete(`/api/threads/${id}`)
+      }
+    }
   }
 }
 

@@ -1,8 +1,11 @@
 <template>
-  <div>
+  <div class="main-layout">
     <AppHeader />
-    <main :class="{ 'loading': isUserDataLoading }" >
-      <router-view class="main-layout__main" />
+    <main
+      :class="{ 'loading': isUserDataLoading }"
+      class="main-layout__main"
+    >
+      <router-view />
     </main>
     <AppFooter class="main-layout__footer" />
   </div>
@@ -11,7 +14,7 @@
 <script>
 import AppHeader from '@/components/AppHeader'
 import AppFooter from '@/components/AppFooter'
-import api from '@/api'
+import { datesHelper } from '@/utils'
 
 export default {
   name: 'MainLayout',
@@ -20,14 +23,20 @@ export default {
     AppFooter
   },
   created () {
-    api.heartbeat.get.date()
-    api.authentication.post.refreshToken()
+    console.log(datesHelper.getDateTimeFromDateString(new Date()))
+  },
+  computed: {
+    isUserDataLoading () {
+      return this.$store.getters.isUserDataLoading
+    }
   }
 }
 </script>
 
 <style lang="scss">
 .main-layout {
+  height: 100%;
+
   &__footer {
     position: fixed;
     bottom: 0;
@@ -36,7 +45,7 @@ export default {
   }
 
   &__main {
-    padding-bottom: 50px !important;
+    height: calc(100% - 46px - 28px);
   }
 }
 </style>
